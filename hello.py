@@ -1,13 +1,17 @@
-from telethon import TelegramClient, events, Button
+from telethon import TelegramClient, events
 import urllib.parse
-
 from telethon.tl.types import InputWebDocument
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from a .env file (if available)
+load_dotenv()
 
 
 
 api_id = 2040
 api_hash = 'b18441a1ff607e10a989891a5462e627'
-bot_token = '*'
+bot_token = os.getenv("BOT_TOKEN", '')
 
 bot = TelegramClient('bot_session', api_id, api_hash).start(bot_token=bot_token)
 
@@ -26,12 +30,11 @@ async def inline(event):
     google_logo_url = "https://1000logos.net/wp-content/uploads/2016/11/New-Google-Logo.jpg"
     gpt_logo_url = "https://upload.wikimedia.org/wikipedia/commons/1/13/ChatGPT-Logo.png"
 
-    # Create InputWebDocument objects for the thumbnails
     google_thumb = InputWebDocument(
         url=google_logo_url,
-        size=0,  # Size is optional, set to 0 if unknown
-        mime_type='image/png',  # MIME type of the image
-        attributes=[]  # Additional attributes (optional)
+        size=0,  
+        mime_type='image/png',  
+        attributes=[]  
     )
     gpt_thumb = InputWebDocument(
         url=gpt_logo_url,
@@ -46,22 +49,18 @@ async def inline(event):
     await event.answer([
         builder.article(
             title=f'google {message}',
-            # text=f'*there you go, was it that hard?* \n\n\n [{message}]({lmgTFY_link})',
             text=f'\n\n\n <a href="{lmgTFY_link}">{message}</a>',
             thumb=google_thumb,
             description='Search on Google',
-            # link_preview=False,  # Note: Correct spelling is `link_preview`, not `link_preview`
-            parse_mode='HTML'  # Uncommented and set to 'Markdown'
+            parse_mode='HTML'  
         ),
         builder.article(
             title=f'chatgpt {message}',
             text=f'\n\n\n <a href="{lmcTFY_link}">{message}</a>',
             thumb=gpt_thumb,
             description='chat with AI',
-            # link_preview=False,  # Note: Correct spelling is `link_preview`, not `link_preview`
-            parse_mode='HTML'  # Uncommented and set to 'Markdown'
+            parse_mode='HTML'  
         )
     ])
 
-# Run the bot
 bot.run_until_disconnected()
